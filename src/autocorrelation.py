@@ -14,23 +14,23 @@ class Autocorrelation:
         self.max_lag = max_lag
         self.function = function
 
-    def correlation_t(self, data: list | np.array, t: int) -> np.array:
-        res = 0
-        self_corr = 0
-        if t < len(data):
-            for i in range(0, len(data) - t):
-                res += (data[i] - np.mean(data)) * (data[i + t] - np.mean(data))
-                self_corr = (data[i] - np.mean(data)) ** 2 / len(data)
-            return res / ((self_corr) * (len(data) - t))
-        else: 
+    def correlation_t(self, data: list | np.array, t: int) -> float:
+        if t >= len(data):
             return 0
 
+        mean = np.mean(data)
+        variance = np.var(data)
+        numerator = np.sum((data[:-t] - mean) * (data[t:] - mean))
+        C_t = numerator / (len(data) * variance)
+
+        return C_t
+
     def compute(self) -> float:
-        tau_int = 1
-        for i in range(0, len(self.data)):
-            c_t = self.correlation_t(self.data, i)
-            tau_int += 2 * c_t
-            if i > 110:
+        tau_int = 0.5
+        for t in range(1, len(self.data)):
+            c_t = self.correlation_t(self.data, t)
+            tau_int += c_t
+            if t > self.max_lag * tau_int:
                 break
         return tau_int
 
