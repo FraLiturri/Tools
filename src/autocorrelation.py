@@ -3,12 +3,8 @@ from typing import Callable
 import numpy as np
 
 
-def f(x):
-    return x
-
-
 class Autocorrelation:
-    def __init__(self, data: list | np.array, *, max_lag: int, function: Callable = f):
+    def __init__(self, data: list | np.array, *, max_lag: int, function: Callable = lambda x: x):
         self.data = function(data)
         self.n = len(data)
         self.max_lag = max_lag
