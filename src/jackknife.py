@@ -40,7 +40,7 @@ class Jackknife:
         aux = 0
 
         for i in range(self.k):
-            F_i = S - sum(self.blocks[i])
+            F_i = S - sum(self.function(self.blocks[i]))
             F_i = F_i / (self.n - len(self.blocks[i]))
             F_val.append(F_i)
 
