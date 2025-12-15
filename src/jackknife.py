@@ -17,12 +17,14 @@ class Jackknife:
         blocks: int,
         therm: int = 0,
         function: callable = lambda x: x**2,
+        primary_functions: list[callable] = []
     ):
         data = data[therm:]  # discard initial therm steps
         self.data = data
         self.k = blocks
         self.n = len(self.data)
         self.function = function
+        self.primary_functions = primary_functions
 
         try:
             assert checker(self.n, self.k) is True
@@ -35,6 +37,31 @@ class Jackknife:
         self.blocks = np.array_split(self.data, self.k)
 
     def execute(self) -> tuple[float, float]:
+        if self.primary_functions != []:
+            F_J = []
+            g_alpha = []
+            mean_element = []
+            for func in self.primary_functions: 
+                F_list = []
+                g_alpha_list = []
+                aux_list = [[]]
+                aux_index = 0
+                S = sum(func(self.data))
+                for i in range(self.k):
+                    g_alpha_i = S - sum(func(self.blocks[i]))
+                    g_alpha_i = g_alpha_i / (self.n - len(self.blocks[i]))
+                    g_alpha_list.append(g_alpha_i)
+
+                _ = np.mean(g_alpha_i)
+                mean_element.append(_)
+
+            g_alpha.append(g_alpha_list)
+            
+            expected_mean = self.function(*mean_element)
+            expected_std = 0
+
+            return expected_mean, expected_std
+
         F_val = []
         S = sum(self.function(self.data))
         aux = 0

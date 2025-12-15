@@ -1,11 +1,11 @@
 import numpy as np
 
 class Autocorrelation:
-    def __init__(self, data: np.ndarray, *, max_lag: int = 5, therm : int = 0, function: callable = lambda x: x):
+    def __init__(self, data: np.ndarray, *, prop: int = 5, therm : int = 0, function: callable = lambda x: x):
         self.data = data[therm:]
         self.data = function(self.data)
         self.n = len(data)
-        self.max_lag = max_lag
+        self.prop = prop
         self.function = function
 
     def correlation_t(self, data: np.array, t: int) -> float:
@@ -16,7 +16,6 @@ class Autocorrelation:
         variance = np.var(data)
         numerator = np.sum((data[:-t] - mean) * (data[t:] - mean))
         C_t = numerator / (len(data) * variance)
-
         return C_t
 
     def compute(self) -> float:
@@ -24,7 +23,7 @@ class Autocorrelation:
         for t in range(1, len(self.data)):
             c_t = self.correlation_t(self.data, t)
             tau_int += c_t
-            if t > self.max_lag * tau_int:
+            if t > self.prop * tau_int:
                 break
         return tau_int
 
