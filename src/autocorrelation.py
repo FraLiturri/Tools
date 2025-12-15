@@ -1,16 +1,14 @@
-from __future__ import annotations
-from typing import Callable
 import numpy as np
 
-
 class Autocorrelation:
-    def __init__(self, data: list | np.array, *, max_lag: int, function: Callable = lambda x: x):
-        self.data = function(data)
+    def __init__(self, data: np.ndarray, *, max_lag: int = 5, therm : int = 0, function: callable = lambda x: x):
+        self.data = data[therm:]
+        self.data = function(self.data)
         self.n = len(data)
         self.max_lag = max_lag
         self.function = function
 
-    def correlation_t(self, data: list | np.array, t: int) -> float:
+    def correlation_t(self, data: np.array, t: int) -> float:
         if t >= len(data):
             return 0
 
