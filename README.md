@@ -3,11 +3,11 @@
 Here are collected some useful tools for Markov Chain data analysis.
 Currently have been implemented: 
 
-- Bootstrap ($\sim O(lkr)$)
-- Jackknife ($\sim O(2lk)$)
+- Bootstrap ( $\sim O(lkr)$ )
+- Jackknife ( $\sim O(2lk)$ )
 - Integrated autocorrelation time calculator
 
-with $l = $ `len(primary_functions)`, $k = $ ```blocks``` and $r = $ ```boot_samples```.
+with $l =$ `len(primary_functions)`, $k =$ ```blocks``` and $r =$ ```boot_samples```.
 
 Both Bootstrap and Jackknife accept two keyword arguments: `primary function : list(callable)` and `function : callable`.The first one is the list of primary functions $g_{\alpha}(x)$ from which $F(x)$, passed through `function`, depends. 
 
